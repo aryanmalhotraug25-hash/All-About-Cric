@@ -71,6 +71,8 @@ st.markdown("""
     .block-container {
         padding-top: 1.5rem;
         padding-bottom: 2rem;
+        position: relative;
+        z-index: 2;
     }
 
     .main-title {
@@ -221,11 +223,68 @@ st.markdown("""
     table {
         animation: fadeInUp 0.6s ease-out;
     }
-            
+
+    /* ===== FLOATING BACKGROUND ELEMENTS ===== */
+    .floating-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 0;
+        overflow: hidden;
+    }
+
+    .floating-item {
+        position: absolute;
+        font-size: 32px;
+        opacity: 0;
+        animation: float linear infinite;
+        user-select: none;
+    }
+
+    @keyframes float {
+        0% {
+            transform: translateY(110vh) rotate(0deg);
+            opacity: 0;
+        }
+        10% {
+            opacity: 0.18;
+        }
+        90% {
+            opacity: 0.18;
+        }
+        100% {
+            transform: translateY(-20vh) rotate(720deg);
+            opacity: 0;
+        }
+    }
+
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
 </style>
+""", unsafe_allow_html=True)
+
+# ==========================================
+# FLOATING BACKGROUND
+# ==========================================
+st.markdown("""
+<div class="floating-bg">
+    <span class="floating-item" style="left: 5%; animation-duration: 20s; animation-delay: 0s;">🏏</span>
+    <span class="floating-item" style="left: 12%; animation-duration: 24s; animation-delay: 3s;">🥎</span>
+    <span class="floating-item" style="left: 20%; animation-duration: 18s; animation-delay: 6s;">🏆</span>
+    <span class="floating-item" style="left: 28%; animation-duration: 26s; animation-delay: 1s;">🏏</span>
+    <span class="floating-item" style="left: 36%; animation-duration: 22s; animation-delay: 4s;">⭐</span>
+    <span class="floating-item" style="left: 44%; animation-duration: 19s; animation-delay: 8s;">🥎</span>
+    <span class="floating-item" style="left: 52%; animation-duration: 25s; animation-delay: 2s;">🏏</span>
+    <span class="floating-item" style="left: 60%; animation-duration: 21s; animation-delay: 5s;">🏆</span>
+    <span class="floating-item" style="left: 68%; animation-duration: 23s; animation-delay: 7s;">🥎</span>
+    <span class="floating-item" style="left: 76%; animation-duration: 17s; animation-delay: 9s;">🏏</span>
+    <span class="floating-item" style="left: 84%; animation-duration: 27s; animation-delay: 2s;">⭐</span>
+    <span class="floating-item" style="left: 92%; animation-duration: 20s; animation-delay: 6s;">🥎</span>
+</div>
 """, unsafe_allow_html=True)
 
 # ==========================================
@@ -765,7 +824,6 @@ elif page == "Predictor":
     teams = metadata['teams']
     venues = metadata['venues']
 
-    # Match setup
     col1, col2, col3 = st.columns(3)
     with col1:
         batting_team = st.selectbox("🏏 Batting Team", teams)
@@ -778,22 +836,19 @@ elif page == "Predictor":
     st.markdown("---")
     st.markdown("### 📊 Current Match Situation")
 
-    # Match situation inputs
     col1, col2, col3 = st.columns(3)
     with col1:
         current_runs = st.number_input("Current Runs", min_value=0, max_value=300, value=80, step=1)
     with col2:
         current_wickets = st.number_input("Wickets Fallen", min_value=0, max_value=10, value=2, step=1)
     with col3:
-        # Generate valid cricket over values: 5.0, 5.1, 5.2, 5.3, 5.4, 5.5, 6.0, ...
         over_options = []
         for over in range(5, 20):
             for ball in range(0, 6):
                 over_options.append(f"{over}.{ball}")
         
-        overs_str = st.selectbox("Overs Completed", over_options, index=30)  # default 10.0
+        overs_str = st.selectbox("Overs Completed", over_options, index=30)
         
-        # Convert cricket notation to decimal for ML
         parts = overs_str.split('.')
         total_balls = int(parts[0]) * 6 + int(parts[1])
         overs_decimal = round(total_balls / 6, 2)
@@ -806,7 +861,6 @@ elif page == "Predictor":
 
     st.markdown("<br>", unsafe_allow_html=True)
 
-    # Smart validation warnings
     validation_passed = True
     if runs_last_5 > current_runs:
         st.warning("⚠️ Runs in last 5 overs cannot exceed current total runs!")
@@ -818,7 +872,6 @@ elif page == "Predictor":
         st.error("Batting team and bowling team must be different!")
         validation_passed = False
 
-    # Predict button
     if st.button("🔮 Predict Final Score", use_container_width=True, disabled=not validation_passed):
         predicted = predict_score(
             model, batting_team, bowling_team, venue,
@@ -826,7 +879,6 @@ elif page == "Predictor":
             runs_last_5, wickets_last_5
         )
 
-        # Display prediction
         lower = max(predicted - 10, current_runs)
         upper = predicted + 10
         
@@ -838,7 +890,6 @@ elif page == "Predictor":
         </div>
         """, unsafe_allow_html=True)
 
-        # Additional insights
         st.markdown("<br>", unsafe_allow_html=True)
         col1, col2, col3, col4 = st.columns(4)
         
@@ -859,6 +910,6 @@ elif page == "Predictor":
 st.markdown("---")
 st.markdown(
     "<p style='text-align:center; color:#94a3b8;'>"
-    "IPL Analytics Dashboard   |  All About Cric...🏏" "</p>",
+    "IPL Analytics Dashboard | All About Cric... 🏏</p>",
     unsafe_allow_html=True
 )
