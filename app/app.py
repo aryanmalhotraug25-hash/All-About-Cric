@@ -28,7 +28,7 @@ from utils import (
 # PAGE CONFIG
 # ==========================================
 st.set_page_config(
-    page_title="All About Cric",
+    page_title="All About Cric...",
     page_icon="🏏",
     layout="wide"
 )
@@ -316,7 +316,7 @@ def styled_table(df, gradient_col=None, cmap='Oranges', format_dict=None):
 # ==========================================
 # HEADER
 # ==========================================
-st.markdown("<h1 class='main-title'>🏏 All About Cric</h1>",
+st.markdown("<h1 class='main-title'>🏏 All About Cric...</h1>",
             unsafe_allow_html=True)
 st.markdown("<p class='sub-title'>IPL Statistics Dashboard | 2008 - 2024</p>",
             unsafe_allow_html=True)
@@ -378,7 +378,7 @@ if page == "Home":
     st.markdown("<br>", unsafe_allow_html=True)
     st.markdown("""
     <div class="info-card">
-        Welcome to <b>All About Cric</b> — an interactive IPL analytics platform 
+        Welcome to <b>All About Cric...</b> — an interactive IPL analytics platform 
         built using <b>Python, Pandas, Seaborn, Scikit-learn and Streamlit</b>.
         Explore detailed stats and try our <b>AI Score Predictor</b> powered 
         by Linear Regression.
@@ -859,7 +859,6 @@ elif page == "Predictor":
 st.markdown("---")
 st.markdown(
     "<p style='text-align:center; color:#94a3b8;'>"
-    "Built with Python, Pandas, Seaborn, Scikit-learn & Streamlit | "
-    "All About Cric 🏏</p>",
+    "IPL Analytics Dashboard   |  All About Cric...🏏" "</p>",
     unsafe_allow_html=True
 )
