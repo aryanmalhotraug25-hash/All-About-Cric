@@ -840,7 +840,8 @@ elif page == "Predictor":
     with col1:
         current_runs = st.number_input("Current Runs", min_value=0, max_value=300, value=80, step=1)
     with col2:
-        current_wickets = st.number_input("Wickets Fallen", min_value=0, max_value=10, value=2, step=1)
+        current_wickets = st.number_input("Wickets Fallen", min_value=0, max_value=9, value=2, step=1,
+                                 help="Innings ends at 10 wickets")
     with col3:
         over_options = []
         for over in range(5, 20):
@@ -855,9 +856,23 @@ elif page == "Predictor":
 
     col1, col2 = st.columns(2)
     with col1:
-        runs_last_5 = st.number_input("Runs in Last 5 Overs", min_value=0, max_value=100, value=40, step=1)
+        runs_last_5 = st.number_input(
+        "Runs in Last 5 Overs",
+        min_value=0,
+        max_value=current_runs,
+        value=min(40, current_runs),
+        step=1,
+        help=f"Cannot exceed current runs ({current_runs})"
+    )
     with col2:
-        wickets_last_5 = st.number_input("Wickets in Last 5 Overs", min_value=0, max_value=5, value=1, step=1)
+        wickets_last_5 = st.number_input(
+        "Wickets in Last 5 Overs",
+        min_value=0,
+        max_value=current_wickets,
+        value=min(2, current_wickets),
+        step=1,
+        help=f"Cannot exceed wickets fallen ({current_wickets})"
+    )
 
     st.markdown("<br>", unsafe_allow_html=True)
 

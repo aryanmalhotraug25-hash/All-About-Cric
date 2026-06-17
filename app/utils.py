@@ -54,15 +54,21 @@ def load_model():
 def predict_score(model, batting_team, bowling_team, venue,
                   current_runs, current_wickets, overs_decimal,
                   runs_last_5, wickets_last_5):
-    """Predict final 1st innings score"""
     
-    # Calculate derived features
+    # RULE 1: All out
+    if current_wickets >= 10:
+        return current_runs
+    
+    # RULE 2: Innings completed
+    if overs_decimal >= 20:
+        return current_runs
+    
+    # Calculate features
     crr = round(current_runs / overs_decimal, 2) if overs_decimal > 0 else 0
     overs_left = round(20 - overs_decimal, 2)
     wickets_left = 10 - current_wickets
     momentum = round(runs_last_5 - (crr * 5), 2)
     
-    # Build input dataframe
     input_df = pd.DataFrame({
         'batting_team': [batting_team],
         'bowling_team': [bowling_team],
@@ -75,8 +81,24 @@ def predict_score(model, batting_team, bowling_team, venue,
         'wickets_last_5': [wickets_last_5]
     })
     
-    predicted = model.predict(input_df)[0]
-    return max(int(predicted), current_runs)  # never less than current
+    predicted = int(model.predict(input_df)[0])
+    
+    # ===== CRICKET-AWARE MANUAL CAP =====
+    # Tail-enders rarely add many runs
+    if current_wickets == 9:
+        max_additional = 15   # last man + tail, very limited
+        predicted = min(predicted, current_runs + max_additional)
+    
+    elif current_wickets == 8:
+        max_additional = 25   # tail with one resource
+        predicted = min(predicted, current_runs + max_additional)
+    
+    elif current_wickets == 7:
+        max_additional = 45   # lower order, some resistance
+        predicted = min(predicted, current_runs + max_additional)
+    
+    # Never less than current runs
+    return max(predicted, current_runs)
 
 
 # ==========================================
