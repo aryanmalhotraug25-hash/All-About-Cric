@@ -261,6 +261,81 @@ st.markdown("""
         }
     }
 
+    /* FORCE DARK MODE - Override Streamlit's auto theme detection */
+    [data-theme="light"], 
+    [data-theme="dark"],
+    :root {
+        --background-color: #0f172a !important;
+        --secondary-background-color: #1e293b !important;
+        --text-color: #f1f5f9 !important;
+        --primary-color: #f97316 !important;
+    }
+
+    html, body {
+        background-color: #0f172a !important;
+        color: #f1f5f9 !important;
+    }
+
+    .stApp {
+        background: linear-gradient(135deg, #0f172a 0%, #111827 45%, #1e293b 100%) !important;
+        color: white !important;
+    }
+
+    /* Force dark on all Streamlit containers */
+    .main, .block-container, section[data-testid="stSidebar"] {
+        background-color: transparent !important;
+        color: white !important;
+    }
+
+    /* Number inputs - force dark */
+    .stNumberInput input, 
+    .stTextInput input,
+    .stSelectbox > div > div {
+        background-color: #1e293b !important;
+        color: white !important;
+        border: 1px solid rgba(255,255,255,0.1) !important;
+    }
+
+    /* Selectbox dropdown menu */
+    div[role="listbox"], 
+    div[data-baseweb="popover"] {
+        background-color: #1e293b !important;
+        color: white !important;
+    }
+
+    div[role="option"] {
+        background-color: #1e293b !important;
+        color: white !important;
+    }
+
+    div[role="option"]:hover {
+        background-color: #f97316 !important;
+    }
+
+    /* Buttons */
+    .stButton button {
+        background-color: #f97316 !important;
+        color: white !important;
+        border: none !important;
+    }
+
+    /* Number input +/- buttons */
+    button[kind="secondary"] {
+        background-color: #334155 !important;
+        color: white !important;
+    }
+
+    /* Warning/Error/Info boxes */
+    .stAlert {
+        background-color: #1e293b !important;
+        color: white !important;
+    }
+
+    /* Top header bar */
+    header[data-testid="stHeader"] {
+        background-color: #0f172a !important;
+    }
+            
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
